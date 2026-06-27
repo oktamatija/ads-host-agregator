@@ -1,0 +1,41 @@
+name: Agregator DNS Blocklist
+
+on:
+  schedule:
+    - cron: '0 3 * * *' # Berjalan otomatis setiap jam 03:00 pagi UTC
+  workflow_dispatch: # Memunculkan tombol agar bisa dijalankan manual kapan saja
+
+jobs:
+  build-list:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Memberikan izin ke robot untuk menyimpan file
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Unduh dan Gabungkan Daftar Blokir
+        run: |
+          echo "🔄 Mengunduh daftar dari berbagai sumber..."
+          curl -s https://v.firebog.net/hosts/AdguardDNS.txt > firebog.txt
+          curl -s https://big.oisd.nl/domainbig > oisd.txt
+          curl -s https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts > stevenblack.txt
+          
+          echo "🧹 Membersihkan dan menggabungkan data..."
+          # Mengambil domain, menghapus IP, menghapus komentar, dan menghapus duplikat
+          cat firebog.txt oisd.txt stevenblack.txt | grep -v "^#" | grep -v "^!" | awk '{print $NF}' | tr -d '\r' | sort -u > master-blocklist.txt
+          
+          echo "✅ Selesai! File berisi $(wc -l < master-blocklist.txt) domain unik."
+          
+          # Hapus file mentah
+          rm firebog.txt oisd.txt stevenblack.txt
+
+      - name: Simpan (Commit) ke Repositori
+        run: |
+          git config --global user.name "GitHub Action Bot"
+          git config --global user.email "action@github.com"
+          git add master-blocklist.txt
+          # Hanya lakukan commit jika ada pembaruan domain baru
+          git diff --quiet && git diff --staged --quiet || git commit -m "Pembaruan otomatis Master Blocklist"
+          git push
