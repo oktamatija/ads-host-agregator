@@ -1,41 +1,51 @@
-name: Agregator DNS Blocklist
+name: Auto Update Aggregator Lists
 
 on:
   schedule:
-    - cron: '0 3 * * *' # Berjalan otomatis setiap jam 03:00 pagi UTC
-  workflow_dispatch: # Memunculkan tombol agar bisa dijalankan manual kapan saja
+    # Menjalankan script setiap hari pada jam 02:00 UTC (09:00 WIB)
+    - cron: '0 2 * * *'
+  workflow_dispatch: # Mengizinkan eksekusi manual via tombol di GitHub
 
 jobs:
-  build-list:
+  update-lists:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write # Memberikan izin ke robot untuk menyimpan file
-
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
-      - name: Unduh dan Gabungkan Daftar Blokir
+      - name: Scrape & Parse Blocklists
         run: |
-          echo "🔄 Mengunduh daftar dari berbagai sumber..."
-          curl -s https://v.firebog.net/hosts/AdguardDNS.txt > firebog.txt
-          curl -s https://big.oisd.nl/domainbig > oisd.txt
-          curl -s https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts > stevenblack.txt
-          
-          echo "🧹 Membersihkan dan menggabungkan data..."
-          # Mengambil domain, menghapus IP, menghapus komentar, dan menghapus duplikat
-          cat firebog.txt oisd.txt stevenblack.txt | grep -v "^#" | grep -v "^!" | awk '{print $NF}' | tr -d '\r' | sort -u > master-blocklist.txt
-          
-          echo "✅ Selesai! File berisi $(wc -l < master-blocklist.txt) domain unik."
-          
-          # Hapus file mentah
-          rm firebog.txt oisd.txt stevenblack.txt
+          echo "🔄 Memulai penarikan data blocklist..."
 
-      - name: Simpan (Commit) ke Repositori
+          # 1. SCAM & PENIPUAN (Fraud)
+          # Sumber: Scam Blocklist oleh durablenapkin (Format Hosts)
+          # Mengambil baris yang diawali 0.0.0.0, lalu mengambil kolom kedua (nama domain)
+          curl -s "https://raw.githubusercontent.com/durablenapkin/scamblocklist/master/hosts.txt" | \
+          grep "^0.0.0.0" | awk '{print $2}' > scam.txt
+
+          # 2. DRUGS (Obat Terlarang) & VIOLENCE (Kekerasan)
+          # Karena list spesifik sangat jarang yang terpisah, kita menggunakan 
+          # OISD NSFW / StevenBlack extensions sebagai sumber basis, lalu dipisah secara konseptual.
+          # Jika Anda memiliki URL mentah spesifik, silakan ganti URL curl di bawah ini.
+          
+          # Contoh: Menggunakan StevenBlack fakenews sebagai placeholder untuk violence/drugs sementara
+          curl -s "https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/fakenews/hosts" | \
+          grep "^0.0.0.0" | awk '{print $2}' > violence.txt
+
+          # Anda bisa menambahkan sumber lain dengan format: curl -s "URL" >> drugs.txt
+          touch drugs.txt # Membuat file kosong agar aplikasi tidak error 404
+
+          echo "✅ Pemrosesan data selesai!"
+
+      - name: Commit and Push Changes
         run: |
-          git config --global user.name "GitHub Action Bot"
-          git config --global user.email "action@github.com"
-          git add master-blocklist.txt
-          # Hanya lakukan commit jika ada pembaruan domain baru
-          git diff --quiet && git diff --staged --quiet || git commit -m "Pembaruan otomatis Master Blocklist"
-          git push
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+          git add scam.txt violence.txt drugs.txt
+          
+          # Hanya commit jika ada perubahan data
+          git diff --quiet && git diff --staged --quiet || git commit -m "🤖 Auto-update blocklists: $(date +'%Y-%m-%d')"
+          
+          # Push ke branch main
+          git push origin main
