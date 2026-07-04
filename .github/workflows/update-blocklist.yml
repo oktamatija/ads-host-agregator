@@ -54,5 +54,8 @@ jobs:
           # Hanya commit jika ada perubahan data (agar history commit tidak penuh spam jika data sama)
           git diff --quiet && git diff --staged --quiet || git commit -m "🤖 Auto-update blocklists: $(date +'%Y-%m-%d')"
           
+          # 🌟 FIX: Tarik pembaruan terbaru dari GitHub sebelum push agar tidak bentrok!
+          git pull --rebase origin main
+          
           # Push pembaruan ke branch main
           git push origin main
