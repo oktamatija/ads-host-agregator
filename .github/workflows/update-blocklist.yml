@@ -13,27 +13,33 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Scrape & Parse Blocklists
+      - name: Scrape & Parse All Blocklists
         run: |
-          echo "🔄 Memulai penarikan data blocklist..."
+          echo "🔄 Memulai penarikan SEMUA data blocklist..."
 
-          # 1. SCAM & PENIPUAN (Fraud)
-          # Sumber: Scam Blocklist oleh durablenapkin (Format Hosts)
-          # Mengambil baris yang diawali 0.0.0.0, lalu mengambil kolom kedua (nama domain)
-          curl -s "https://raw.githubusercontent.com/durablenapkin/scamblocklist/master/hosts.txt" | \
-          grep "^0.0.0.0" | awk '{print $2}' > scam.txt
+          # 1. ADS (Iklan & Telemetri Utama) - Menggunakan StevenBlack Base
+          curl -s "https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts" | grep "^0.0.0.0" | awk '{print $2}' | grep -v "^0\.0\.0\.0$" > ads.txt
 
-          # 2. DRUGS (Obat Terlarang) & VIOLENCE (Kekerasan)
-          # Karena list spesifik sangat jarang yang terpisah, kita menggunakan 
-          # OISD NSFW / StevenBlack extensions sebagai sumber basis, lalu dipisah secara konseptual.
-          # Jika Anda memiliki URL mentah spesifik, silakan ganti URL curl di bawah ini.
-          
-          # Contoh: Menggunakan StevenBlack fakenews sebagai placeholder untuk violence/drugs sementara
-          curl -s "https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/fakenews/hosts" | \
-          grep "^0.0.0.0" | awk '{print $2}' > violence.txt
+          # 2. ADULT (Konten Dewasa) - StevenBlack Porn
+          curl -s "https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/porn/hosts" | grep "^0.0.0.0" | awk '{print $2}' | grep -v "^0\.0\.0\.0$" > adult.txt
 
-          # Anda bisa menambahkan sumber lain dengan format: curl -s "URL" >> drugs.txt
-          touch drugs.txt # Membuat file kosong agar aplikasi tidak error 404
+          # 3. GAMBLING (Perjudian) - StevenBlack Gambling
+          curl -s "https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/gambling/hosts" | grep "^0.0.0.0" | awk '{print $2}' | grep -v "^0\.0\.0\.0$" > gambling.txt
+
+          # 4. MALWARE - URLhaus (Sumber otoritatif)
+          curl -s "https://urlhaus.abuse.ch/downloads/hostfile/" | grep "^127.0.0.1" | awk '{print $2}' | grep -v "localhost" > malware.txt
+
+          # 5. PHISHING - Phishing Army (Sudah berupa raw domains)
+          curl -s "https://phishing.army/download/phishing_army_blocklist.txt" | grep -v "^#" > phishing.txt
+
+          # 6. SCAM (Penipuan) - DurableNapkin
+          curl -s "https://raw.githubusercontent.com/durablenapkin/scamblocklist/master/hosts.txt" | grep "^0.0.0.0" | awk '{print $2}' | grep -v "^0\.0\.0\.0$" > scam.txt
+
+          # 7. DRUGS & 8. VIOLENCE
+          # Karena file mentah publik sangat jarang yang memisahkan kategori ini secara spesifik, 
+          # kita buatkan filenya agar siap diisi manual atau disambung ke sumber lain nanti.
+          touch drugs.txt
+          touch violence.txt
 
           echo "✅ Pemrosesan data selesai!"
 
@@ -42,10 +48,11 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           
-          git add scam.txt violence.txt drugs.txt
+          # Tambahkan semua file teks hasil tarikan
+          git add ads.txt adult.txt gambling.txt malware.txt phishing.txt scam.txt drugs.txt violence.txt
           
-          # Hanya commit jika ada perubahan data
+          # Hanya commit jika ada perubahan data (agar history commit tidak penuh spam jika data sama)
           git diff --quiet && git diff --staged --quiet || git commit -m "🤖 Auto-update blocklists: $(date +'%Y-%m-%d')"
           
-          # Push ke branch main
+          # Push pembaruan ke branch main
           git push origin main
