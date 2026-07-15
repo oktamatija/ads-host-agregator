@@ -117,7 +117,6 @@ bsnltower.com
 bsnltowerinstallations.com
 bsntowoff.com
 buddhakind.com
-budm.shop
 burgershirt.com
 buydubuy.com
 bwpkizpfms.funnelish.com
@@ -860,7 +859,6 @@ store.filmhunt.pl
 store.filser.pl
 store.find-vod.com
 store.finnews7.wordpress.com
-store.fitgirl-repacks.vip
 store.fixpub.com
 store.flattee.com
 store.folkrbvi.pages.dev
@@ -898,6 +896,7 @@ store.indianvisaservice.org.in
 store.instant-e-app-for-campaign.github.io
 store.iphone.quiztionnaire.biz
 store.iqcreditcheck.com
+store.jagkart.com
 store.jasper-lilac-van.glitch.me
 store.jellystores.com
 store.jsdimmigration.com
@@ -947,7 +946,6 @@ store.navi21.com
 store.navi23.com
 store.navi24.com
 store.navi3.com
-store.navi42.ru
 store.navi5.com
 store.navi6.com
 store.navi72.ru
@@ -1008,11 +1006,11 @@ store.ringtoperfection.com
 store.robalmeister.workers.dev
 store.robuxmenu.vip
 store.rozomii.info
+store.rptbaa.shop
 store.rsaonlinenow.com.au
 store.rupiahsaku.com
 store.rustdesk.secure-box.de
 store.saveeeee.myshopify.com
-store.sber.pay.pay.booking.com-id20341.info
 store.seasonsofficial.com
 store.securevault.top
 store.security-meta.pages.app.br
@@ -1109,6 +1107,7 @@ store.visacentral.com
 store.visadone.com
 store.visafirst.com
 store.visumbuitenland.nl
+store.vizjer.com.pl
 store.vizjer.eu
 store.vod-tv.pl
 store.vod.film
@@ -1279,6 +1278,7 @@ visasimple.com
 visatoindia.org
 visumbuitenland.nl
 vizjer-pl.pl
+vizjer.com.pl
 vizjer.eu
 vod-tv.pl
 vod.film
@@ -1296,8 +1296,8 @@ weathly.com
 webvod.pl
 whbinder.com
 wikeb.com
-wind88.shop
 wintexfashions.com
+wisdomganga.com
 withyotta.com
 woadoodles.com
 wp3.xyz
@@ -1407,7 +1407,6 @@ www.bncentertainment.com
 www.bnidigital.com
 www.bolejug.us
 www.bombardina.pl
-www.booking.transaction-processing.one
 www.botsuanah.com
 www.bradcroninnapo82.myshopify.com
 www.breakshirts.com
@@ -1575,7 +1574,6 @@ www.freebitcoin.pages.dev
 www.freedom-5g.com
 www.friday89.com
 www.friday99.com
-www.frostgoddess.com
 www.fuehrungszeugnis-service.de
 www.fullview.pl
 www.fumekart.com
@@ -2098,7 +2096,6 @@ www.universityofqatarrectorate.godaddysites.com
 www.uplevelreward.com
 www.ureashi.com
 www.us99.pro
-www.uschse04.my03.com
 www.uusilemmikki.com
 www.valeofoodsgroup.com
 www.validsteamkeys.com
@@ -2126,6 +2123,7 @@ www.visasimple.com
 www.visatoindia.org
 www.visumbuitenland.nl
 www.vizjer-pl.pl
+www.vizjer.com.pl
 www.vizjer.eu
 www.vod-tv.pl
 www.vod.film
@@ -2165,7 +2163,6 @@ www.yhdshop.com
 www.yofi-yofi.com
 www.youdebrid.com
 www.yoursecrethookup.com
-www.youthfy.shop
 www.youtubee.com
 www.youtunbe.com
 www.youutube.com
@@ -2214,7 +2211,6 @@ youtunbe.com
 youutube.com
 ytvancedpro.com
 yuaonew.com
-yyderfreap.shop
 z-lib.id
 z-lib.is
 zalukaj-film.pl
